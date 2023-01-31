@@ -126,11 +126,19 @@ class UserController implements Controller {
     res: Response,
     next: NextFunction
   ): Promise<Response | void> => {
-    const users = await this.UserService.getAllUsers();
+    try {
+      const users = await this.UserService.getAllUsers(req.query);
 
-    res
-      .status(HTTPCodes.OK)
-      .json({ status: 'success', results: users.length, users });
+      res
+        .status(HTTPCodes.OK)
+        .json({ status: 'success', results: users.length, users });
+    } catch (error) {
+      console.log('error', error);
+      return res.status(HTTPCodes.BAD_REQUEST).json({
+        status: 'failed',
+        messsage: `Cant find any user`,
+      });
+    }
   };
 }
 

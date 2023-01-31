@@ -31,9 +31,40 @@ class UserService {
     return user;
   }
 
-  public async getAllUsers(): Promise<any> {
+  public async getAllUsers(queryString: {
+    ORDER_BY?: string;
+    LIMIT?: number;
+  }): Promise<any> {
     try {
-      const users = await mysql.query('SELECT * FROM users', []);
+      let query: string = 'SELECT * FROM users';
+      // let query: string = `SELECT * FROM users ORDER BY ${queryString.ORDER_BY} ASC`;
+      let args: any[] = [];
+
+      if (queryString.ORDER_BY) {
+        query += ` ORDER BY`;
+        queryString.ORDER_BY.split(',').forEach((orderBy, index) => {
+          if (index > 0) {
+            query += ',';
+          }
+          query += ` ${orderBy.replace('-', '')}`;
+
+          const isDescending = queryString.ORDER_BY?.includes('-');
+          if (isDescending) {
+            query += ' DESC';
+          } else {
+            query += ' ASC';
+          }
+        });
+      }
+
+      // if (queryString.LIMIT) {
+      //   query += ' LIMIT ?';
+      //   args.push(queryString.LIMIT);
+      // }
+
+      console.log('query', query);
+      console.log('args', args);
+      const users = await mysql.query(query, args);
 
       return users;
     } catch (error) {
