@@ -23,6 +23,12 @@ class UserController implements Controller {
 
     this.router.get(`${this.path}/me`, this.getMe);
 
+    this.router.post(
+      `${this.path}`,
+      validationMiddleware(validate.create),
+      this.createUser
+    );
+
     this.router.patch(
       `${this.path}/:id`,
       validationMiddleware(validate.update),
@@ -33,6 +39,25 @@ class UserController implements Controller {
 
     this.router.delete(`${this.path}/:id`, this.deleteUser);
   }
+
+  private createUser = async (
+    req: Request,
+
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    const { firstName, lastName, email, password } = req.body;
+
+    const user = await this.UserService.createUser(req.body);
+
+    if (!user)
+      return res.status(HTTPCodes.BAD_REQUEST).json({
+        status: 'failed',
+        messsage: `Cant create user`,
+      });
+
+    res.status(HTTPCodes.CREATED).json({ status: 'success', user });
+  };
 
   private getMe = (
     req: Request,

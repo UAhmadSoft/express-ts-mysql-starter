@@ -16,6 +16,8 @@ class App {
     this.express = express();
     this.port = port;
 
+    console.log('process.env.MONGO_PATH', process.env.MONGO_PATH);
+
     this.initialiseDatabaseConnection();
     this.initialiseMiddleware();
     this.initialiseControllers(controllers);
