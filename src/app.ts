@@ -48,10 +48,13 @@ class App {
   }
 
   private initialiseDatabaseConnection(): void {
-    const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
+    const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH, MONGO_DB_NAME } =
+      process.env;
 
     mongoose
-      .connect(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`)
+      .connect(
+        `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}/${MONGO_DB_NAME}`
+      )
       .then(() => {
         console.log('DB Connected Successfully');
       })
