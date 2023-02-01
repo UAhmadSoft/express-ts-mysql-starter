@@ -2,6 +2,7 @@ import UserModel from '@/resources/user/user.model';
 import token from '@/utils/token';
 
 import mysql from '@/utils/helpers/mysql';
+import ApiFeatures from '@/utils/helpers/apiFeatures';
 class UserService {
   private user = UserModel;
 
@@ -37,30 +38,17 @@ class UserService {
   }): Promise<any> {
     try {
       let query: string = 'SELECT * FROM users';
-      // let query: string = `SELECT * FROM users ORDER BY ${queryString.ORDER_BY} ASC`;
+      // let query: string = `SELECT * FROM users ORDER BY ${queryString.ORDER_BY} ASC where id = ?`;
+
       let args: any[] = [];
 
-      if (queryString.ORDER_BY) {
-        query += ` ORDER BY`;
-        queryString.ORDER_BY.split(',').forEach((orderBy, index) => {
-          if (index > 0) {
-            query += ',';
-          }
-          query += ` ${orderBy.replace('-', '')}`;
+      const apiFeatures = new ApiFeatures(query, queryString, args)
+        .filter()
+        .sort()
+        .paginate();
 
-          const isDescending = queryString.ORDER_BY?.includes('-');
-          if (isDescending) {
-            query += ' DESC';
-          } else {
-            query += ' ASC';
-          }
-        });
-      }
-
-      // if (queryString.LIMIT) {
-      //   query += ' LIMIT ?';
-      //   args.push(queryString.LIMIT);
-      // }
+      query = apiFeatures.query;
+      args = apiFeatures.args;
 
       console.log('query', query);
       console.log('args', args);

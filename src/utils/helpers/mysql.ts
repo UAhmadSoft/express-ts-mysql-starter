@@ -22,8 +22,8 @@ class mysql {
 
   static async query(sql: string, params: any[]) {
     const connection = await mysql2.createConnection(options);
+
     const [rows, fields] = await connection.execute(sql, params);
-    console.log('fields', fields);
     return rows;
   }
 }
