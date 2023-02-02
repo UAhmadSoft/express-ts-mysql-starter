@@ -23,19 +23,17 @@ class PostController implements Controller {
     );
   }
 
-  private create = catchAsync(
-    async (
-      req: Request,
-      res: Response,
-      next: NextFunction
-    ): Promise<Response | void> => {
-      const { title, body } = req.body;
+  private create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> => {
+    const { content } = req.body;
 
-      const post = await this.PostService.create(title, body);
+    const post = await this.PostService.create(content, req.user._id);
 
-      res.status(201).json({ post });
-    }
-  );
+    res.status(201).json({ post });
+  };
 }
 
 export default PostController;

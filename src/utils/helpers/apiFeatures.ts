@@ -62,7 +62,7 @@ class ApiFeatures {
             // * If value is not an array, add = clause
             // * e.g { id: 11, firstName: 'Niko' } => WHERE id = 11 AND firstName = 'Niko'
             if (index > 0) {
-              this.query += ' OR';
+              this.query += ' AND';
             }
 
             // * if value is like 11-12 , add BETWEEN clause
