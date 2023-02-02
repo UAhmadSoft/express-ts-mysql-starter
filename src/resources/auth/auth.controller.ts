@@ -8,6 +8,7 @@ import authenticated from '@/middleware/authenticated.middleware';
 import { HTTPCodes } from '@/utils/helpers/response';
 import AuthService from './auth.service';
 import { sendMail } from '@/utils/helpers/email';
+import catchAsync from '@/utils/helpers/catchAsync';
 
 class AuthController implements Controller {
   public path = '/auth';
@@ -41,12 +42,12 @@ class AuthController implements Controller {
     // this.router.patch(`${this.path}/-password`, this.forgotPassword);
   }
 
-  private login = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response | void> => {
-    try {
+  private login = catchAsync(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<Response | void> => {
       const { email, password } = req.body;
 
       const { user, token } = await this.AuthService.login(email, password);
@@ -55,17 +56,15 @@ class AuthController implements Controller {
       user.passwordConfirm = undefined;
 
       res.status(HTTPCodes.OK).json({ user, token });
-    } catch (error: any) {
-      next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
     }
-  };
+  );
 
-  private signUp = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response | void> => {
-    try {
+  private signUp = catchAsync(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<Response | void> => {
       const { firstName, lastName, passwordConfirm, email, password } =
         req.body;
 
@@ -93,17 +92,15 @@ class AuthController implements Controller {
       });
 
       res.status(HTTPCodes.CREATED).json({ user, token });
-    } catch (error: any) {
-      next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
     }
-  };
+  );
 
-  private confirmMail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response | void> => {
-    try {
+  private confirmMail = catchAsync(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<Response | void> => {
       const { token } = req.params;
 
       const user = await this.AuthService.confirmMail(token);
@@ -112,17 +109,15 @@ class AuthController implements Controller {
       user.activationLink = undefined;
 
       res.status(HTTPCodes.OK).json({ user });
-    } catch (error: any) {
-      next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
     }
-  };
+  );
 
-  private updatePassword = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response | void> => {
-    try {
+  private updatePassword = catchAsync(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<Response | void> => {
       const { password, passwordConfirm } = req.body;
 
       const user = await this.AuthService.updatePassword(
@@ -135,17 +130,15 @@ class AuthController implements Controller {
       user.passwordConfirm = undefined;
 
       res.status(HTTPCodes.OK).json({ user });
-    } catch (error: any) {
-      next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
     }
-  };
+  );
 
-  private forgotPassword = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response | void> => {
-    try {
+  private forgotPassword = catchAsync(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<Response | void> => {
       const { email } = req.body;
 
       const user = await this.AuthService.forgotPassword(email);
@@ -154,17 +147,15 @@ class AuthController implements Controller {
       user.passwordConfirm = undefined;
 
       res.status(HTTPCodes.OK).json({ user });
-    } catch (error: any) {
-      next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
     }
-  };
+  );
 
-  private resetPassword = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response | void> => {
-    try {
+  private resetPassword = catchAsync(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<Response | void> => {
       const { email, password, passwordConfirm } = req.body;
 
       const user = await this.AuthService.resetPassword(
@@ -177,10 +168,8 @@ class AuthController implements Controller {
       user.passwordConfirm = undefined;
 
       res.status(HTTPCodes.OK).json({ user });
-    } catch (error: any) {
-      next(new HttpException(HTTPCodes.BAD_REQUEST, error.message));
     }
-  };
+  );
 }
 
 export default AuthController;
