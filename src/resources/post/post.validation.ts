@@ -4,4 +4,8 @@ const create = Joi.object({
   content: Joi.string().required(),
 });
 
-export default { create };
+const update = Joi.object({
+  content: Joi.string().required(),
+});
+
+export default { create, update };

@@ -4,6 +4,7 @@ import UserModel from '@/resources/user/user.model';
 import Token from '@/utils/interfaces/token.interface';
 import HttpException from '@/utils/exceptions/http.exception';
 import jwt from 'jsonwebtoken';
+import mysql from '@/utils/helpers/mysql';
 
 async function authenticatedMiddleware(
   req: Request,
@@ -26,9 +27,9 @@ async function authenticatedMiddleware(
       return next(new HttpException(401, 'Unauthorised'));
     }
 
-    const user = await UserModel.findById(payload.id)
-      .select('-password')
-      .exec();
+    const [user] = await mysql.query(
+      `SELECT * FROM users WHERE id = ${payload.id}`
+    );
 
     if (!user) {
       return next(new HttpException(401, 'Unauthorised'));
@@ -38,6 +39,7 @@ async function authenticatedMiddleware(
 
     return next();
   } catch (error) {
+    console.log('error', error);
     return next(new HttpException(401, 'Unauthorised'));
   }
 }

@@ -28,10 +28,9 @@ const login = Joi.object({
 });
 
 const update = Joi.object({
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  role: Joi.string(),
-  email: Joi.string(),
+  firstName: Joi.string().max(30),
+  lastName: Joi.string().max(30),
+  email: Joi.string().email(),
 });
 
 export default { signUp, login, update, create };

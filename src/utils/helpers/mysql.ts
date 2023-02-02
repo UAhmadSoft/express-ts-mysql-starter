@@ -20,7 +20,7 @@ class mysql {
     return connection;
   }
 
-  static async query(sql: string, params: any[]) {
+  static async query(sql: string, params: any[] = []): Promise<any> {
     const connection = await mysql2.createConnection(options);
 
     const [rows, fields] = await connection.execute(sql, params);

@@ -33,8 +33,9 @@ class UserService {
   }
 
   public async getAllUsers(queryString: {
-    ORDER_BY?: string;
-    LIMIT?: number;
+    sort?: string;
+    limit?: number;
+    page?: number;
   }): Promise<any> {
     try {
       let query: string = 'SELECT * FROM users';

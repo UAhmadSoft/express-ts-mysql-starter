@@ -1,26 +1,19 @@
 import UserModel from '@/resources/user/user.model';
+import mysql from '@/utils/helpers/mysql';
 import token from '@/utils/token';
 import crypto from 'crypto';
 class AuthService {
   private user = UserModel;
 
   public async login(email: string, password: string): Promise<any | Error> {
-    try {
-      const user = await this.user.findOne({ email }).select('+password');
+    const [user] = await mysql.query(
+      'SELECT * FROM users WHERE email = ? AND password = ?',
+      [email, password]
+    );
 
-      if (!user) {
-        throw new Error('Unable to find user with that email address');
-      }
+    const accessToken = token.createToken(user);
 
-      if (await user.isValidPassword(password)) {
-        return { token: token.createToken(user), user };
-      } else {
-        throw new Error(`Password doesn't match`);
-      }
-    } catch (error: any) {
-      console.log('error', error);
-      throw new Error(error.message || 'Unable to login');
-    }
+    return { user, token: accessToken };
   }
 
   public async signUp(
