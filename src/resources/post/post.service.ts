@@ -27,6 +27,13 @@ class PostService {
     let query: string = 'SELECT * FROM posts';
     let args: any[] = [];
 
+    // * Inner join with users table
+    // * Select all columns from posts table and only name from users table
+    // * select * from posts , users where posts.userId = users.id
+
+    // query += ' INNER JOIN users ON posts.userId = users.id';
+    query += ' LEFT JOIN users ON posts.userId = users.id';
+
     const apiFeatures = new ApiFeatures(query, queryString, args)
       .filter()
       .sort()
@@ -35,6 +42,13 @@ class PostService {
     query = apiFeatures.query;
     args = apiFeatures.args;
 
+    // * Inner join with users table
+
+    //     query += `SELECT * FROM posts p
+    // inner join users u ON p.userId = u.id`;
+
+    console.log('query', query);
+    console.log('args', args);
     const posts = await mysql.query(query, args);
     return posts;
   }

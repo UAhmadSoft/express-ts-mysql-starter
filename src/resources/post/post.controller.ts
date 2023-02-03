@@ -61,7 +61,7 @@ class PostController implements Controller {
     ): Promise<Response | void> => {
       const posts = await this.PostService.getAll(req.query);
 
-      res.status(200).json({ posts });
+      res.status(200).json({ results: posts.length, posts });
     }
   );
 
