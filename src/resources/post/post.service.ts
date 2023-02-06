@@ -34,7 +34,7 @@ class PostService {
     // query += ' INNER JOIN users ON posts.userId = users.id';
     query += ' LEFT JOIN users ON posts.userId = users.id';
 
-    const apiFeatures = new ApiFeatures(query, queryString, args)
+    const apiFeatures = new ApiFeatures(query, queryString, args, 'posts')
       .filter()
       .sort()
       .paginate();

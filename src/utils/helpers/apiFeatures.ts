@@ -5,11 +5,13 @@ class ApiFeatures {
       // * object with string keys and any values
       [key: string]: any;
     },
-    public args: any[] = []
+    public args: any[] = [],
+    public table: string
   ) {
     this.query = query;
     this.queryString = queryString;
     this.args = args;
+    this.table = table;
   }
 
   public filter() {

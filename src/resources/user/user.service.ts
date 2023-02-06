@@ -43,7 +43,11 @@ class UserService {
 
       let args: any[] = [];
 
-      const apiFeatures = new ApiFeatures(query, queryString, args)
+      // & Inner join with posts table
+      // & Select all columns from users table and only content from posts table
+      query += ' INNER JOIN posts ON users.id = posts.userId';
+
+      const apiFeatures = new ApiFeatures(query, queryString, args, 'users')
         .filter()
         .sort()
         .paginate();
