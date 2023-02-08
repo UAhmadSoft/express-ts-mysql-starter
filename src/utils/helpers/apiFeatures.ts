@@ -59,7 +59,7 @@ class ApiFeatures {
               this.args.push(value);
             });
 
-            this.query += ` ${entry[0]} IN (${inClause})`;
+            this.query += ` ${this.table}.${entry[0]} IN (${inClause})`;
           } else {
             // * If value is not an array, add = clause
             // * e.g { id: 11, firstName: 'Niko' } => WHERE id = 11 AND firstName = 'Niko'
@@ -71,11 +71,11 @@ class ApiFeatures {
             // * e.g { id: '11-12', firstName: 'Niko' } => WHERE id BETWEEN 11 AND 12 AND firstName = 'Niko'
             if (entry[1].includes('-')) {
               const values = entry[1].split('-');
-              this.query += ` ${entry[0]} BETWEEN ? AND ?`;
+              this.query += ` ${this.table}.${entry[0]} BETWEEN ? AND ?`;
               this.args.push(values[0]);
               this.args.push(values[1]);
             } else {
-              this.query += ` ${entry[0]} = ?`;
+              this.query += ` ${this.table}.${entry[0]} = ?`;
               this.args.push(entry[1]);
             }
           }
@@ -94,7 +94,7 @@ class ApiFeatures {
           if (index > 0) {
             this.query += ',';
           }
-          this.query += ` ${orderBy.replace('-', '')}`;
+          this.query += ` ${this.table}.${orderBy.replace('-', '')}`;
 
           const isDescending = orderBy.includes('-');
           if (isDescending) {

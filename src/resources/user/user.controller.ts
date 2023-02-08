@@ -21,6 +21,7 @@ class UserController implements Controller {
     // this.router.get(`${this.path}`, authenticated, this.getUsers);
 
     this.router.get(`${this.path}`, this.getUsers);
+    this.router.get(`${this.path}/posts`, this.getUsersPosts);
 
     this.router.get(`${this.path}/me`, this.getMe);
 
@@ -84,6 +85,7 @@ class UserController implements Controller {
       res: Response,
       next: NextFunction
     ): Promise<Response | void> => {
+      console.log('user123');
       const { id } = req.params;
 
       const user = await this.UserService.getUser(id);
@@ -140,7 +142,22 @@ class UserController implements Controller {
       res: Response,
       next: NextFunction
     ): Promise<Response | void> => {
+      console.log('users');
       const users = await this.UserService.getAllUsers(req.query);
+
+      res
+        .status(HTTPCodes.OK)
+        .json({ status: 'success', results: users.length, users });
+    }
+  );
+
+  private getUsersPosts = catchAsync(
+    async (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ): Promise<Response | void> => {
+      const users = await this.UserService.getAllUsersPosts(req.query);
 
       res
         .status(HTTPCodes.OK)
